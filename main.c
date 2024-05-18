@@ -8,28 +8,40 @@
 #include <arpa/inet.h>
 
 #define PORT "8080"
+#define BUFFSIZE 2048
+
+#include "filehandle.h"
 
 
-int count_file_bytes(char *filename)
-{
-	FILE *fp;
-	int c,count = 0;
-	fp = fopen(filename,"r");
-	if(fp != NULL){
-		while((c = fgetc(fp)) != EOF)
-			count++;
-	}
-	fclose(fp);
-	return count;
+char *get_file_path(const char *request) {
+    char *path = NULL;
+    char *start = strstr(request, "GET ");
+    if (start != NULL) {
+        start += 4; // Move past "GET "
+        char *end = strstr(start, " ");
+        if (end != NULL) {
+            int path_length = end - start;
+            path = (char *)malloc(path_length + 1);
+            strncpy(path, start, path_length);
+            path[path_length] = '\0';
+        }
+    }
+    return path;
 }
 
 
 
+char* requestpath(int sockfd)
+{
+	char *buffer=(char *)malloc(BUFFSIZE);
 
+	int bytes = read(sockfd,buffer,BUFFSIZE);
+	return buffer;
+};
 
 int main(int argc, char argv[])
 {
-
+	
 	int status;
 	struct addrinfo hints, *res;
 	int sockfd;
@@ -51,7 +63,10 @@ int main(int argc, char argv[])
 	{
 		fprintf(stderr, "socket error %s\n", strerror(sockfd));
 	}
-
+	
+	int opt = 1;
+	setsockopt(sockfd,SOL_SOCKET,SO_REUSEADDR,(char *)&opt,sizeof(opt));
+	
 	bindstatus = bind(sockfd, res->ai_addr, res->ai_addrlen);
 	if (bindstatus == -1)
 	{
@@ -59,7 +74,7 @@ int main(int argc, char argv[])
 	}
 
 	freeaddrinfo(res);
-	// listen
+	
 	int l;
 	l = listen(sockfd, 10);
 	if (l != 0)
@@ -69,30 +84,45 @@ int main(int argc, char argv[])
 
 	while (1)
 	{
-		// accept
 		struct sockaddr_in client_addr;
 		int newfd;
 		socklen_t theiraddr = sizeof client_addr;
 		newfd = accept(sockfd,(struct sockaddr *)&client_addr, &theiraddr);
-
+		
+			
 		if (newfd == -1)
 		{
 			fprintf(stderr, "%saccept error %s\n", strerror(errno));
 		}
-	//	else{
+		else{
 			char str[INET_ADDRSTRLEN];
 			inet_ntop(client_addr.sin_family,(struct inaddr *)&client_addr.sin_addr,str,INET_ADDRSTRLEN);
 			printf("connection from %s\n",str);
-	//	}
-					
+		}
+		
+	
+		char *request = requestpath(newfd);			
+		printf("Path is %s\n",request);
+		
+		char *filepath = get_file_path(request);
+		printf("file is %s\n",filepath);
+		
+		free(request);	
+		printf("file path len %d\n",strlen(filepath));	
+		char *response = NULL;
+		if(strcmp(filepath,"/") == 0){
+			printf("filepath is true\n\n");
+			response = content("index.html");
 
-		// send
-
-		char *buffer = "hello world";	
+		}	
+		else{
+			response = "404 Page Not Found";	
+		}
+		
 		int len, bytes_sent;
 			
-		len = strlen(buffer);
-		bytes_sent = send(newfd, buffer, len, 0);
+		len = strlen(response);
+		bytes_sent = send(newfd, response, len, 0);
 		shutdown(newfd,SHUT_WR);
 	}
 	close(sockfd);
