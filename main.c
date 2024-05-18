@@ -11,7 +11,7 @@
 #define BUFFSIZE 2048
 
 #include "filehandle.h"
-
+#include "httpresponse.h"
 
 char *get_file_path(const char *request) {
     char *path = NULL;
@@ -27,7 +27,7 @@ char *get_file_path(const char *request) {
         }
     }
     return path;
-}
+};
 
 
 
@@ -102,15 +102,11 @@ int main(int argc, char argv[])
 		
 	
 		char *request = requestpath(newfd);			
-		printf("Path is %s\n",request);
-		
 		char *filepath = get_file_path(request);
-		printf("file is %s\n",filepath);
-		
-		free(request);	
-		printf("file path len %d\n",strlen(filepath));	
+		free(request);
+
 		char *response = NULL;
-		if(strcmp(filepath,"/") == 0){
+		if(strcmp(filepath,"/") == 0 || strcmp(filepath,"/index.html") == 0){
 			printf("filepath is true\n\n");
 			response = content("index.html");
 
@@ -120,9 +116,14 @@ int main(int argc, char argv[])
 		}
 		
 		int len, bytes_sent;
+		char *secondr = (char *) malloc(4000);
+		char *genres = generate_http_response();
+		char *date = get_date_for_server();
+		int n = snprintf(secondr,4000,genres,date,response);
 			
-		len = strlen(response);
-		bytes_sent = send(newfd, response, len, 0);
+		printf("%s\n",secondr);	
+		len = strlen(secondr);
+		bytes_sent = send(newfd, secondr, len, 0);
 		shutdown(newfd,SHUT_WR);
 	}
 	close(sockfd);
