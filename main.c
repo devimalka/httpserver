@@ -39,9 +39,9 @@ char* requestpath(int sockfd)
 	return buffer;
 };
 
-int main(int argc, char argv[])
+int main(int argc, char *argv[])
 {
-	
+
 	int status;
 	struct addrinfo hints, *res;
 	int sockfd;
@@ -50,8 +50,10 @@ int main(int argc, char argv[])
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
-	
 
+	char *file = get_file_ext("test.txt",'.');
+
+	printf("%s type is \n",file);
 	status = getaddrinfo(NULL, PORT, &hints, &res);
 	if (status == -1)
 	{
@@ -63,10 +65,10 @@ int main(int argc, char argv[])
 	{
 		fprintf(stderr, "socket error %s\n", strerror(sockfd));
 	}
-	
+
 	int opt = 1;
 	setsockopt(sockfd,SOL_SOCKET,SO_REUSEADDR,(char *)&opt,sizeof(opt));
-	
+
 	bindstatus = bind(sockfd, res->ai_addr, res->ai_addrlen);
 	if (bindstatus == -1)
 	{
@@ -74,7 +76,7 @@ int main(int argc, char argv[])
 	}
 
 	freeaddrinfo(res);
-	
+
 	int l;
 	l = listen(sockfd, 10);
 	if (l != 0)
@@ -88,42 +90,62 @@ int main(int argc, char argv[])
 		int newfd;
 		socklen_t theiraddr = sizeof client_addr;
 		newfd = accept(sockfd,(struct sockaddr *)&client_addr, &theiraddr);
-		
-			
+
+
 		if (newfd == -1)
 		{
-			fprintf(stderr, "%saccept error %s\n", strerror(errno));
+			fprintf(stderr, "accept error %s\n", strerror(errno));
 		}
 		else{
 			char str[INET_ADDRSTRLEN];
 			inet_ntop(client_addr.sin_family,(struct inaddr *)&client_addr.sin_addr,str,INET_ADDRSTRLEN);
 			printf("connection from %s\n",str);
 		}
-		
-	
-		char *request = requestpath(newfd);			
+
+		char *request = requestpath(newfd);
 		char *filepath = get_file_path(request);
+		printf("%s\n",filepath);
 		free(request);
 
 		char *response = NULL;
 		if(strcmp(filepath,"/") == 0 || strcmp(filepath,"/index.html") == 0){
-			printf("filepath is true\n\n");
 			response = content("index.html");
 
-		}	
-		else{
-			response = "404 Page Not Found";	
 		}
-		
+//		else if(strcmp(filepath,"/image.jpg") == 0){
+//			FILE *fp = fopen("image.jpg","rb");
+//			int count = count_file_bytes(fp);
+//			char *content_two = (char*)malloc(sizeof(char)*count+1);
+
+//		}
+		else if(strcmp(filepath,"/image.jpg") == 0){
+			response = read_binary_file("image.jpg");
+			printf("%s\n",response);
+		}
+		else
+			response = "404 Not Found";
+
 		int len, bytes_sent;
-		char *secondr = (char *) malloc(4000);
-		char *genres = generate_http_response();
+		char *http_response = (char *) malloc(4000);
+		char *generated_http_response = generate_http_response();
 		char *date = get_date_for_server();
-		int n = snprintf(secondr,4000,genres,date,response);
-			
-		printf("%s\n",secondr);	
-		len = strlen(secondr);
-		bytes_sent = send(newfd, secondr, len, 0);
+		char *ext = get_file_ext(filepath,'.');
+		printf("filepath %s\n",filepath);
+		char *type = NULL;
+		if(ext != NULL){
+		type = get_type(ext);
+
+		}
+		else{
+		 type = "text/html";
+		}
+
+		int n = snprintf(http_response,4000,generated_http_response,date,type,response);
+
+
+		len = strlen(http_response);
+		bytes_sent = send(newfd, http_response, len, 0);
+		free(date);
 		shutdown(newfd,SHUT_WR);
 	}
 	close(sockfd);
