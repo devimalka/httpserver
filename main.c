@@ -51,9 +51,6 @@ int main(int argc, char *argv[])
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
 
-	char *file = get_file_ext("test.txt",'.');
-
-	printf("%s type is \n",file);
 	status = getaddrinfo(NULL, PORT, &hints, &res);
 	if (status == -1)
 	{
@@ -120,11 +117,11 @@ int main(int argc, char *argv[])
 //		}
 		else if(strcmp(filepath,"/image.jpg") == 0){
 			response = read_binary_file("image.jpg");
-			printf("%s\n",response);
 		}
 		else
 			response = "404 Not Found";
 
+		printf("Response is %s\n",response);
 		int len, bytes_sent;
 		char *http_response = (char *) malloc(4000);
 		char *generated_http_response = generate_http_response();

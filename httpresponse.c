@@ -28,7 +28,7 @@ char *generate_http_response()
 	"Connection: Keep-Alive\r\n"
 	"Date: %s\r\n"
 	"Content-Type: %s\r\n"
-	"Content-Length: %d\r\n"
+//	"Content-Length: %d\r\n"
 	"\n"
 	"%s";
 
