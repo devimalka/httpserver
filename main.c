@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
             fprintf(stderr,"Error opening binary file");
    
         uint8_t buff[fdata->length];
-        snprintf(http_header,256,"HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\nContent-Length: %llu\r\n",fdata->length);
+        snprintf(http_header,256,"HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\nContent-Length: %llu\r\n\r\n",fdata->length);
         send(newfd,http_header,strlen(http_header),0);
         send(newfd,fdata->data,fdata->length,0);
         printf("length is %ld\n",fdata->length);
