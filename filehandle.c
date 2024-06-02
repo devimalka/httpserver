@@ -1,6 +1,59 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
+
+#define BUFFSIZE 2048
+
+typedef struct file_data {
+	uint8_t *data;
+	size_t length;
+}file_data;
+
+
+struct file_data *read_file(const char *path){
+
+		FILE *handler = NULL;
+		struct file_data *fdata = NULL;
+		size_t read_length = 0;
+		uint8_t buffer[BUFFSIZE] = {0x00};
+
+		fdata = malloc(sizeof(struct file_data));
+		if(fdata == NULL)
+			return NULL;
+
+		bzero(fdata, sizeof(struct file_data));
+
+		fdata->data = malloc(1);
+		if(fdata->data == NULL){
+			free(fdata);
+			return NULL;
+		}
+
+		handler = fopen(path,"rb");
+		if(handler == NULL){
+			free(fdata->data);
+			free(fdata);
+			return NULL;
+		}
+
+		while(!feof(handler)){
+			read_length = fread(buffer,1,BUFFSIZE,handler);
+			fdata->data = realloc(fdata->data,fdata->length + read_length);
+			if(fdata->data == NULL){
+				fclose(handler);
+				free(fdata);
+				return NULL;
+			}
+			memcpy(fdata->data +fdata->length, buffer, read_length);
+			fdata->length += read_length;
+		}
+
+		fclose(handler);
+
+		return fdata;
+}
+
 
 // open the requested file and return the file pointer
 FILE* requestfile(char *filename){

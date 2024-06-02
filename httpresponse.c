@@ -19,7 +19,7 @@ char* get_date_for_server()
 
 }
 
-// generate http response 
+// generate http response
 char *generate_http_response()
 {
 	char *Header =
@@ -28,14 +28,14 @@ char *generate_http_response()
 	"Connection: Keep-Alive\r\n"
 	"Date: %s\r\n"
 	"Content-Type: %s\r\n"
-//	"Content-Length: %d\r\n"
+	"Content-Length: %d\r\n"
 	"\n"
 	"%s";
 
 	return Header;
 }
 
-// return the file mime type 
+// return the file mime type
 char *get_type(char *filepath)
 {
 
