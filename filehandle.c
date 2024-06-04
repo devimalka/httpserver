@@ -83,6 +83,8 @@ int count_file_bytes(FILE *fp)
 char* content(char *filename)
 {
 	FILE *fp = requestfile(filename);
+    if(fp == NULL)
+        return "404 Not Found";
 	int bytecount = count_file_bytes(fp);
 	char *content = (char *) malloc(bytecount+1);
 
@@ -117,21 +119,21 @@ char *get_file_ext(char *filename, int c)
 
 
 // read the file in binary format
-char *read_binary_file(char *filename)
-{
-	FILE *fp = fopen(filename,"rb");
-	if(fp == NULL)
-		fprintf(stderr,"\t Error Opening file: %s\n",filename);
-	long image_size;
-	int c;
-	int count = 0;
-	fseek(fp,0,SEEK_END);
-	image_size = ftell(fp);
-	rewind(fp);
-	char *buffer = (char *)malloc(image_size);
-
-	fread(buffer,1,image_size,fp);
-
-	fclose(fp);
-	return buffer;
-}
+//char *read_binary_file(char *filename)
+//{
+//	FILE *fp = fopen(filename,"rb");
+//	if(fp == NULL)
+//		fprintf(stderr,"\t Error Opening file: %s\n",filename);
+//	long image_size;
+//	int c;
+//	int count = 0;
+//	fseek(fp,0,SEEK_END);
+//	image_size = ftell(fp);
+//	rewind(fp);
+//	char *buffer = (char *)malloc(image_size);
+//
+//	fread(buffer,1,image_size,fp);
+//
+//	fclose(fp);
+//	return buffer;
+//}
