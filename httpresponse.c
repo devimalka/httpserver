@@ -19,22 +19,6 @@ char* get_date_for_server()
 
 }
 
-// generate http response
-char *generate_http_response()
-{
-	char *Header =
-	"HTTP/1.1 200 OK\r\n"
-	"Access-Control-Allow-Origin: *\r\n"
-	"Connection: Keep-Alive\r\n"
-	"Date: %s\r\n"
-	"Content-Type: %s\r\n"
-	"Content-Length: %d\r\n"
-	"\n"
-	"%s";
-
-	return Header;
-}
-
 // return the file mime type
 char *get_type(char *filepath)
 {
