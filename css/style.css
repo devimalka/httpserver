@@ -1,0 +1,28 @@
+
+.cd-logo {
+    width: 100px; /* Adjust width as needed */
+    height: 100px; /* Adjust height as needed */
+    background-image: url("../images/clogo.png"); /* Replace with your C logo image path */
+    background-size: cover;
+    animation: rotate 2s linear infinite;
+  }
+  
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+
+  *{
+    text-align: center;
+    align-items: center;
+  }
+li{
+    list-style-type:  none;
+}
