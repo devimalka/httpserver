@@ -35,3 +35,5 @@ To start the HTTP server, run the following command:
 
 ```bash
 ./output
+```
+By default, the server listens on port 8080. You can access it by navigating to http://localhost:8080 in your web browser.
