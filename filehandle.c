@@ -106,6 +106,8 @@ char *content(char *filename) {
 // get file extension before last '.'
 char *get_file_ext(char *filename, int c) {
   char *type = strrchr(filename, c);
+  if(type == NULL)
+      type = ".html";
   return type;
 }
 

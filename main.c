@@ -79,8 +79,7 @@ int main(int argc, char *argv[]) {
 
     char *response = NULL;
 
-    if (ext == NULL && strcmp(filepath, "/") == 0 ||
-        strcmp(ext, ".html") == 0) {
+    if (strcmp(ext, ".html") == 0) {
       if (strcmp(path, "") == 0 || strcmp(filepath, "index.html") == 0) {
 
         response = content("index.html");

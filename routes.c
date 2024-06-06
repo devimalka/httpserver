@@ -22,16 +22,6 @@ char *get_file_path(const char *request) {
 };
 
 char *removenslash(char *request) {
-//    char *path = null; 
-//    char *start = strstr(request,"/");
-//    char *end = strstr(request," ");
-//    if(end != null) {
-//        int path_length = end - start;
-//        strncpy(path,start,path_length);
-//        path[path_length] = '\0';
-//    }
-//    return path;
-
       char *path = request + 1;
       return path;
 }
