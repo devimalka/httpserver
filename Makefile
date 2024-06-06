@@ -1,7 +1,7 @@
 CC = gcc
-CFLAGS = -g -o
+CFLAGS = -g 
 SRCS = main.c filehandle.c httpresponse.c routes.c
 main: main.c
-	$(CC) $(SRCS)  $(CFLAGS) output
+	$(CC) $(SRCS)  $(CFLAGS) -o output
 clean:
 	rm -f a.out output
