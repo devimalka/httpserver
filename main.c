@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
         int len, bytes_sent;
         int n =
             snprintf(http_response, RESSIZE,
-                     "HTTP/1.1 200 OK\r\nAcess-Control-Allow-Origin: "
+                     "HTTP/1.1 200 OK\r\nAcess-Control-Allow-Origin: *"
                      "*\r\nConnection: Keep-Alive\r\nDate: %s\r\nContent-Type: "
                      "%s\r\nContent-Length: %d\r\n\n%s",
                      date, "text/html", content_length, response);
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
         int len, bytes_sent;
         int n =
             snprintf(http_response, RESSIZE,
-                     "HTTP/1.1 %s\r\nAcess-Control-Allow-Origin: "
+                     "HTTP/1.1 %s\r\nAcess-Control-Allow-Origin: *"
                      "*\r\nConnection: Keep-Alive\r\nDate: %s\r\nContent-Type: "
                      "%s\r\nContent-Length: %d\r\n\n%s",
                      statuscode, date, "text/html", content_length, response);
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
       int len, bytes_sent;
       int n =
           snprintf(http_response, RESSIZE,
-                   "HTTP/1.1 %s\r\nAcess-Control-Allow-Origin: "
+                   "HTTP/1.1 %s\r\nAcess-Control-Allow-Origin: *"
                    "*\r\nConnection: Keep-Alive\r\nDate: %s\r\nContent-Type: "
                    "%s\r\nContent-Length: %d\r\n\n%s",
                    statuscode, date, "text/css", content_length, response);
@@ -159,7 +159,7 @@ int main(int argc, char *argv[]) {
         char tempresponse[256];
         int temp_n =
             snprintf(tempresponse, 256,
-                     "HTTP/1.1 404 Not Found\r\nAcess-Control-Allow-Origin: "
+                     "HTTP/1.1 404 Not Found\r\nAcess-Control-Allow-Origin: *"
                      "*\r\nConnection: Keep-Alive\r\nDate: %s\r\nContent-Type: "
                      "%s\r\nContent-Length: %d\r\n\n%s",
                      date, "text/html", templen, temp404);
