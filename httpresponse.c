@@ -19,4 +19,29 @@ char* get_date_for_server()
 
 }
 
+// return the MIME types for file type
+char *return_content_type(char *filetype){
+		if(strcmp(filetype,".jpeg") == 0 || strcmp(filetype,".jpg") == 0){
+				return "image/jpeg";
+		}
 
+		else if(strcmp(filetype,".css") == 0){
+				return "text/css";
+		}
+
+		else if(strcmp(filetype,".js") == 0){
+				return "text/javascript";
+		}
+
+		else if(strcmp(filetype,".png") == 0){
+				return "image/png";
+		}
+
+		else if(strcmp(filetype,".html") == 0){
+				return "text/html";
+		}
+		else {
+				return "text/html";
+		}
+
+}

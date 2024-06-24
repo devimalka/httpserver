@@ -26,3 +26,15 @@
 li{
     list-style-type:  none;
 }
+
+
+#main-img{
+  width: 80%;
+  height: 80%;
+  
+}
+
+#main-img img{
+  width: 100%;
+  
+}

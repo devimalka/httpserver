@@ -149,7 +149,7 @@ int main(int argc, char *argv[]) {
              strcmp(ext, ".png") == 0) {
       char http_header[256];
       char *date = get_date_for_server();
-
+      char *type = return_content_type(ext);
       struct file_data *fdata = NULL;
       fdata = read_file(path);
       if (fdata == NULL) {
@@ -172,7 +172,7 @@ int main(int argc, char *argv[]) {
         uint8_t buff[fdata->length];
         snprintf(http_header, 256,
                  "HTTP/1.1 200 OK\r\nContent-Type: "
-                 "image/jpeg\r\nContent-Length: %llu\r\n\r\n",
+                 "%s\r\nContent-Length: %llu\r\n\r\n",type,
                  fdata->length);
         send(newfd, http_header, strlen(http_header), 0);
         send(newfd, fdata->data, fdata->length, 0);
